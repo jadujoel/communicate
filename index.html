@@ -98,6 +98,8 @@
                 .then(stream => {
                     localVideo.srcObject = stream;
                     stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+                    // localVideo.remote.
+                    return localVideo.play();
                 })
                 .catch(error => {
                     console.error('Error accessing media devices:', error);
@@ -108,6 +110,7 @@
                 .then(() => {
                     socket.emit('offer', peerConnection.localDescription);
                 });
+
         });
     </script>
 </body>
