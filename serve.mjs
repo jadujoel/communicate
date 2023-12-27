@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 import fs from 'fs';
 import http from 'http';
@@ -5,10 +6,18 @@ import https from 'https';
 import { resolve } from 'path';
 import { Server } from 'socket.io';
 
-const app = express();
+const httpApp = express();
+httpApp.use(cors());
+
+const sslApp = express();
+sslApp.use(cors());
 
 try {
-  start(http.createServer(app), 8080)
+  start(
+    http.createServer(httpApp),
+    httpApp,
+    8080
+  )
 } catch (e) {
   console.error(e)
 }
@@ -16,7 +25,8 @@ try {
   start(https.createServer({
     key: fs.readFileSync(file`private.key`),
     cert: fs.readFileSync(file`certificate.crt`),
-  }, app),
+  }, sslApp),
+  sslApp,
     8443
   );
 } catch (e) {
@@ -25,10 +35,11 @@ try {
 
 /**
  * @param {http.Server | https.Server} server
+ * @param {express.Express} app
  * @param {number} port
  * @returns {void}
  */
-function start(server, port) {
+function start(server, app, port) {
   const io = new Server(server);
   const validation = file`11A934882D5862AF9BBFEDE453D6433F.txt`
 
