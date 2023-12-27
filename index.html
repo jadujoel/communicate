@@ -1,38 +1,112 @@
 <!doctype html>
 <html>
 <head>
-    <title>Chat</title>
+    <title>Chat with Video</title>
     <style>
         /* Add some basic styling */
+        #video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 10px;
+        }
+        video {
+            width: 100%;
+            height: auto;
+        }
+        html {
+            background-color: #404040;
+            color: white;
+            font-size: 1.4em;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            display: grid;
+            grid-template-columns: 2;
+        }
+        button {
+            background-color: #707070;
+            font-size: 8em;
+            color: white;
+        }
     </style>
 </head>
 <body>
-    <form id="form" action="">
-        <input id="input" autocomplete="off" /><button type="submit">Send</button>
-    </form>
-    <ul id="messages"></ul>
+    <button id="offer">Stream</button>
+    <div id="video-grid">
+        <video id="local-video" muted autoplay></video>
+        <video id="remote-video" autoplay></video>
+    </div>
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const socket = io();
-            const form = document.getElementById('form');
-            const input = document.getElementById('input');
-            const messages = document.getElementById('messages');
+    <script defer>
+        /** @type {import('socket.io').Server} */
+        const socket = io();
 
-            form.addEventListener('submit', function(e) {
-              e.preventDefault();
-              if (input.value) {
-                  socket.emit('chat message', input.value);
-                  input.value = '';
-              }
-            });
+        /** @type {HTMLVideoElement} */
+        const localVideo = document.getElementById('local-video');
+        /** @type {HTMLVideoElement} */
+        const remoteVideo = document.getElementById('remote-video');
+        /** @type {HTMLButtonElement} */
+        const offerButton = document.getElementById('offer');
 
-            socket.on('chat message', (msg) => {
-                const item = document.createElement('li');
-                item.textContent = msg;
-                messages.appendChild(item);
-                window.scrollTo(0, document.body.scrollHeight);
-            });
+        const peerConnection = new RTCPeerConnection();
+        let isStarted = false;
+
+        // Handling video streaming
+        navigator.mediaDevices.getUserMedia({ video: {
+            echoCancellation: false,
+            autoGainControl: false,
+            noiseSuppression: false,
+            sampleRate: 48000,
+        }, audio: {
+            echoCancellation: false,
+            autoGainControl: false,
+            noiseSuppression: false,
+            sampleRate: 48000,
+        }}).then(stream => {
+            localVideo.srcObject = stream;
+            stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+        });
+
+        peerConnection.ontrack = event => {
+            console.log('ontrack')
+            remoteVideo.srcObject = event.streams[0];
+        };
+
+        // WebRTC signaling
+        socket.on('offer', offer => {
+            console.log('offer')
+            peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+            peerConnection.createAnswer()
+                .then(answer => peerConnection.setLocalDescription(answer))
+                .then(() => {
+                    socket.emit('answer', peerConnection.localDescription);
+                });
+        });
+
+        socket.on('answer', (answer) => {
+            console.log('answer')
+            peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+        });
+
+        socket.on('candidate', (candidate) => {
+            console.log('candidate')
+            peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+        });
+
+        peerConnection.onicecandidate = event => {
+            if (event.candidate) {
+                socket.emit('candidate', event.candidate);
+            }
+        };
+
+        offerButton.addEventListener('click', () => {
+            console.log('offerButton')
+            peerConnection.createOffer()
+                .then(offer => peerConnection.setLocalDescription(offer))
+                .then(() => {
+                    socket.emit('offer', peerConnection.localDescription);
+                });
         });
     </script>
 </body>
