@@ -98,9 +98,6 @@
                 .then(stream => {
                     localVideo.srcObject = stream;
                     stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
-                    console.log('play')
-                    // localVideo.remote.
-                    localVideo.play().catch(console.warn);
                 })
                 .catch(error => {
                     console.error('Error accessing media devices:', error);
@@ -113,6 +110,14 @@
                 });
 
         });
+
+        const playButton = document.createElement('button');
+        playButton.innerText = 'Play';
+        playButton.addEventListener('click', () => {
+            console.log('play')
+            localVideo.play().catch(console.warn);
+        });
+        document.body.appendChild(playButton);
     </script>
 </body>
 </html>
