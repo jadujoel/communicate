@@ -100,7 +100,7 @@
                     stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
                     console.log('play')
                     // localVideo.remote.
-                    localVideo.play();
+                    localVideo.play().catch(console.warn);
                 })
                 .catch(error => {
                     console.error('Error accessing media devices:', error);
