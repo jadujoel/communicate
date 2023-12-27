@@ -116,6 +116,7 @@
         playButton.addEventListener('click', () => {
             console.log('play')
             localVideo.play().catch(console.warn);
+            remoteVideo.play().catch(console.warn);
         });
         document.body.appendChild(playButton);
     </script>
