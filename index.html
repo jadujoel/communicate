@@ -111,14 +111,21 @@
 
         });
 
-        const playButton = document.createElement('button');
-        playButton.innerText = 'Play';
-        playButton.addEventListener('click', () => {
+        const localBtn = document.createElement('button');
+        localBtn.innerText = 'Play Local';
+        localBtn.addEventListener('click', () => {
             console.log('play')
             localVideo.play().catch(console.warn);
-            remoteVideo.play().catch(console.warn);
         });
-        document.body.appendChild(playButton);
+        document.body.appendChild(localBtn)
+
+        const remoteBtn = document.createElement('button');
+        remoteBtn.innerText = 'Play Remote';
+        remoteBtn.addEventListener('click', () => {
+            console.log('play')
+            localVideo.play().catch(console.warn);
+        });
+        document.body.appendChild(remoteBtn);
     </script>
 </body>
 </html>
