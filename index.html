@@ -100,30 +100,36 @@
                     stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
                 })
                 .catch(error => {
-                    console.error('Error accessing media devices:', error);
+                    console.warn('Error accessing media devices:', error);
                 });
 
             peerConnection.createOffer()
                 .then(offer => peerConnection.setLocalDescription(offer))
                 .then(() => {
                     socket.emit('offer', peerConnection.localDescription);
-                });
+                }).catch(error => {
+                    console.warn('Error making offer', error);
+                })
 
         });
 
         const localBtn = document.createElement('button');
         localBtn.innerText = 'Play Local';
         localBtn.addEventListener('click', () => {
-            console.log('play')
-            localVideo.play().catch(console.warn);
+            console.log('play local')
+            localVideo.play().catch(error => {
+                console.warn('Error playing local video', error)
+            });
         });
         document.body.appendChild(localBtn)
 
         const remoteBtn = document.createElement('button');
         remoteBtn.innerText = 'Play Remote';
         remoteBtn.addEventListener('click', () => {
-            console.log('play')
-            remoteVideo.play().catch(console.warn);
+            console.log('play remote')
+            remoteVideo.play().catch(error => {
+                console.warn('Error playing remote video', error)
+            });
         });
         document.body.appendChild(remoteBtn);
     </script>
