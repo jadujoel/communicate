@@ -58,11 +58,6 @@
             sampleRate: 48000,
         }
         settings = { video: true }
-        // Handling video streaming
-        navigator.mediaDevices.getUserMedia(settings).then(stream => {
-            localVideo.srcObject = stream;
-            stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
-        });
 
         peerConnection.ontrack = event => {
             console.log('ontrack')
@@ -80,7 +75,7 @@
                 });
         });
 
-        socket.on('answer', (answer) => {
+        socket.on('answer', answer => {
             console.log('answer')
             peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
         });
@@ -97,7 +92,17 @@
         };
 
         offerButton.addEventListener('click', () => {
-            console.log('offerButton')
+            console.log('Starting video stream');
+            // Start the video stream on button click
+            navigator.mediaDevices.getUserMedia(settings)
+                .then(stream => {
+                    localVideo.srcObject = stream;
+                    stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+                })
+                .catch(error => {
+                    console.error('Error accessing media devices:', error);
+                });
+
             peerConnection.createOffer()
                 .then(offer => peerConnection.setLocalDescription(offer))
                 .then(() => {
