@@ -51,19 +51,15 @@
 
         const peerConnection = new RTCPeerConnection();
         let isStarted = false;
-
+        let settings = {
+            echoCancellation: false,
+            autoGainControl: false,
+            noiseSuppression: false,
+            sampleRate: 48000,
+        }
+        settings = { video: true }
         // Handling video streaming
-        navigator.mediaDevices.getUserMedia({ video: {
-            echoCancellation: false,
-            autoGainControl: false,
-            noiseSuppression: false,
-            sampleRate: 48000,
-        }, audio: {
-            echoCancellation: false,
-            autoGainControl: false,
-            noiseSuppression: false,
-            sampleRate: 48000,
-        }}).then(stream => {
+        navigator.mediaDevices.getUserMedia(settings).then(stream => {
             localVideo.srcObject = stream;
             stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
         });
