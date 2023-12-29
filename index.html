@@ -57,7 +57,11 @@
             noiseSuppression: false,
             sampleRate: 48000,
         }
-        settings = { video: true }
+        settings = { video: true, audio: {
+            echoCancellation: false,
+            autoGainControl: false,
+            noiseSuppression: false,
+        } }
 
         peerConnection.ontrack = event => {
             console.log('ontrack')

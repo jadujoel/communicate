@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import cors from 'cors';
 import express from 'express';
 import fs from 'fs';
