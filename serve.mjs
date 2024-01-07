@@ -4,7 +4,7 @@ import cors from 'cors';
 import express from 'express';
 import fs from 'fs';
 import http from 'http';
-// import https from 'https';
+import https from 'https';
 import { resolve } from 'path';
 import { Server } from 'socket.io';
 
@@ -23,17 +23,18 @@ try {
 } catch (e) {
   console.error(e)
 }
-// try {
-//   start(https.createServer({
-//     key: fs.readFileSync(file`private.key`),
-//     cert: fs.readFileSync(file`certificate.crt`),
-//   }, sslApp),
-//   sslApp,
-//     8443
-//   );
-// } catch (e) {
-//   console.error(e)
-// }
+try {
+  start(https.createServer({
+    // key: fs.readFileSync(file`private.key`),
+    key: fs.readFileSync('/etc/letsencrypt/live/streams.autos/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/streams.autos/fullchain.pem'),
+  }, sslApp),
+  sslApp,
+    8443
+  );
+} catch (e) {
+  console.error(e)
+}
 
 /**
  * @param {http.Server | https.Server} server
