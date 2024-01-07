@@ -1,8 +1,6 @@
-name: Push to EC2
-on: [push]
+on: push
 jobs:
-  build:
-    name: Build
+  deploy:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -11,6 +9,4 @@ jobs:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-        port: ${{ secrets.EC2_PORT }}
-        source: "."
         target: "/home/ec2-user/app"
