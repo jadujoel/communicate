@@ -1,6 +1,13 @@
 {
   "apps": [
     {
+      "name": "start",
+      "script": "sudo nginx -c /home/ec2-user/app/nginx.conf",
+      "instances": 1,
+      "autorestart": false,
+      "watch": false
+    },
+    {
       "name": "app",
       "script": "npm run restart",
       "instances": 1,
@@ -9,17 +16,6 @@
         "serve.mjs",
         "package.json",
         "ecosystem.config.json"
-      ],
-      "max_memory_restart": "1G"
-    },
-    {
-      "name": "nginx",
-      "script": "sudo nginx -s stop && -c /home/ec2-user/app/nginx.conf",
-      "instances": 1,
-      "autorestart": false,
-      "watch": [
-        "ecosystem.config.json",
-        "nginx.conf"
       ],
       "max_memory_restart": "1G"
     }

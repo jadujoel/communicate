@@ -4,15 +4,15 @@ import cors from 'cors';
 import express from 'express';
 import fs from 'fs';
 import http from 'http';
-import https from 'https';
+// import https from 'https';
 import { resolve } from 'path';
 import { Server } from 'socket.io';
 
 const httpApp = express();
 httpApp.use(cors());
 
-const sslApp = express();
-sslApp.use(cors());
+// const sslApp = express();
+// sslApp.use(cors());
 
 try {
   start(
@@ -23,17 +23,17 @@ try {
 } catch (e) {
   console.error(e)
 }
-try {
-  start(https.createServer({
-    key: fs.readFileSync(file`private.key`),
-    cert: fs.readFileSync(file`certificate.crt`),
-  }, sslApp),
-  sslApp,
-    8443
-  );
-} catch (e) {
-  console.error(e)
-}
+// try {
+//   start(https.createServer({
+//     key: fs.readFileSync(file`private.key`),
+//     cert: fs.readFileSync(file`certificate.crt`),
+//   }, sslApp),
+//   sslApp,
+//     8443
+//   );
+// } catch (e) {
+//   console.error(e)
+// }
 
 /**
  * @param {http.Server | https.Server} server
