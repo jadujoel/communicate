@@ -1,0 +1,23 @@
+{
+  "apps": [
+    {
+      "name": "reroute",
+      "script": "sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080 && sudo iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8443",
+      "instances": 1,
+      "autorestart": false,
+      "watch": false
+    },
+    {
+      "name": "app",
+      "script": "npm run restart",
+      "instances": 1,
+      "autorestart": true,
+      "watch": [
+        "serve.mjs",
+        "package.json",
+        "ecosystem.config.json"
+      ],
+      "max_memory_restart": "1G"
+    }
+  ]
+}
