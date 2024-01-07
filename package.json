@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "redirect": "sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080 && sudo iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8443",
+    "restart": "npm i && node serve.mjs",
     "serve": "node serve.mjs"
   },
   "keywords": [],
