@@ -1,13 +1,6 @@
 {
   "apps": [
     {
-      "name": "start",
-      "script": "sudo nginx -c /home/ec2-user/app/nginx.conf",
-      "instances": 1,
-      "autorestart": false,
-      "watch": false
-    },
-    {
       "name": "app",
       "script": "npm run restart",
       "instances": 1,
