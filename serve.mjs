@@ -24,14 +24,14 @@ try {
   console.error(e)
 }
 try {
-  start(https.createServer({
-    // key: fs.readFileSync(file`private.key`),
-    key: fs.readFileSync('/etc/letsencrypt/live/streams.autos/privkey.pem'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/streams.autos/fullchain.pem'),
-  }, sslApp),
-  sslApp,
-    8443
-  );
+  // start(https.createServer({
+  //   // key: fs.readFileSync(file`private.key`),
+  //   key: fs.readFileSync('/etc/letsencrypt/live/streams.autos/privkey.pem'),
+  //   cert: fs.readFileSync('/etc/letsencrypt/live/streams.autos/fullchain.pem'),
+  // }, sslApp),
+  // sslApp,
+  //   8443
+  // );
 } catch (e) {
   console.error(e)
 }

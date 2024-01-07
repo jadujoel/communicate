@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "restart": "npm i && node serve.mjs & sudo nginx -c /home/ec2-user/app/nginx.conf || sudo nginx -s reload",
+    "restart": "sudo nginx -s stop | sudo nginx -c /home/ec2-user/app/nginx.conf | npm i | node serve.mjs",
     "serve": "node serve.mjs"
   },
   "keywords": [],
